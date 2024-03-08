@@ -20,19 +20,34 @@ with gr.Blocks() as demo:
   with gr.Row():
     predict_btn = gr.Button("Predict")
   
-  prediction = gr.Number(label="Prediction")
+  prediction = gr.Textbox(label="Was the passenger transported?", interactive=False)
 
-  def predict(num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11, num12, num13):
+  def predict(HomePlanet=0, 
+            CryoSleep=0,	
+            Destination=0,	
+            VIP=0,	
+            RoomService=0,
+            FoodCourt=0,
+            ShoppingMall=0,	
+            Spa=0,	
+            VRDeck=0,	
+            deck=0,	
+            num=0,
+            side=0,	
+            AgeGroup=0):
     np_array = create_array([[num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11, num12, num13]])
     df = pd.DataFrame(np_array, columns=['HomePlanet',	'CryoSleep',	'Destination',	'VIP',	'RoomService'	,'FoodCourt'	,'ShoppingMall',	'Spa',	'VRDeck',	'deck',	'num'	,'side',	'AgeGroup'])
-    prediction = rand.predict(df)
-    return prediction
+    transported = rfc.predict(df)[0]
+    if transported == 1:
+      return f"The passenger was transported"
+    else:
+      return f"The passenger was not transported"
 
   def create_array(numbers):
     # Convert the list of numbers to a NumPy array
     array = np.array(numbers)
     return array
   
-  predict_btn.click(predict, inputs=[HomePlanet, CryoSleep,	Destination,	VIP,	RoomService	,FoodCourt	,ShoppingMall,	Spa,	VRDeck,	deck,	num	,side,	AgeGroup], outputs=prediction)
+  predict_btn.click(predict, inputs=[HomePlanet, CryoSleep,	Destination,	VIP,	RoomService	,FoodCourt	,ShoppingMall,	Spa,	VRDeck,	deck,	num	,side,	AgeGroup], outputs = [prediction])
 
 demo.launch(debug=True)

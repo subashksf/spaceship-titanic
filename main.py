@@ -7,13 +7,14 @@ Original ipynb file is located at
 
 import numpy as np
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
 import config
 from data_management import load_dataset
 from preprocessors import preprocess_boolean, label_encode, preprocess_cabin, preprocess_age
+from model_evaluation import model_metrics
+from models import model_rfc_train, model_rfc_predict
 
 train = load_dataset(config.TRAIN_FILE)
 test = load_dataset(config.TEST_FILE)
@@ -57,37 +58,14 @@ train = train.drop(config.FEATURES_DROP, axis=1)
 test = test.drop(config.FEATURES_DROP, axis=1)
 
 """# Model Building"""
-
-# Model evaluation
-from sklearn import metrics
-
-def model_metrics(prediction, model):
-
-  # Model Accuracy, how often is the classifier correct?
-  print(f"{model} Accuracy:",metrics.accuracy_score(y_test, prediction))
-  print("\n")
-
-  # confusion matrix
-  cm= metrics.confusion_matrix(y_test, prediction)
-  cm_dis = metrics.ConfusionMatrixDisplay(confusion_matrix=cm)
-  cm_dis.plot()
-  #plt.show()
-
-  classx= metrics.classification_report(y_test, prediction)
-  print("\n")
-  print(f"{model} Classification Report:\n", classx)
-
 X = train.drop(config.TARGET, axis=1)
 y = train[config.TARGET]
 
-from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-# Model using the best random forest parameters. Refer the ipynb file for details of the GridSearchCV
-rfc1=RandomForestClassifier(random_state=42, max_features='sqrt', n_estimators= 500, max_depth=8, criterion='entropy')
-rfc1.fit(X_train, y_train)
+rfc = model_rfc_train(X_train, y_train)
 
-y_pred_rf_best=rfc1.predict(X_test)
+y_pred_rfc = model_rfc_predict(X_test, rfc)
 
 # Model evaluation
-model_metrics(y_pred_rf_best, 'Grid Searched Random Forest')
+model_metrics(y_test, y_pred_rfc, 'Grid Searched Random Forest')
