@@ -36,17 +36,16 @@ for col in config.FEATURES_BOOL:
 # Replace bool values in the label with 0-false, 1-true
 preprocess_boolean(train, config.TARGET)
 
-# Replace the null values in the categorical columns with the mode
-
+# Replace the null values in the categorical columns as MISSING
 for col in config.FEATURES_TO_ENCODE:
-  train[col].fillna(train[col].mode()[0], inplace=True)
-  test[col].fillna(test[col].mode()[0], inplace=True)
+  train[col] = train[col].fillna(train[col].mode()[0])
+  test[col] = test[col].fillna(test[col].mode()[0])
 
 # For numerical features, replace the null values with the median
 
 for col in config.FEATURES_NUMERICAL:
-  train[col].fillna(train[col].median(), inplace=True)
-  test[col].fillna(test[col].median(), inplace=True)
+  train[col] = train[col].fillna(train[col].median())
+  test[col] = test[col].fillna(test[col].median())
 
 # Label encode categorical columns
 for col in config.FEATURES_TO_ENCODE:
@@ -54,8 +53,8 @@ for col in config.FEATURES_TO_ENCODE:
   test = label_encode(test, col)
 
 # Drop the features which are not required
-train.drop(config.FEATURES_DROP, axis=1, inplace=True)
-test.drop(config.FEATURES_DROP, axis=1, inplace=True)
+train = train.drop(config.FEATURES_DROP, axis=1)
+test = test.drop(config.FEATURES_DROP, axis=1)
 
 """# Model Building"""
 
