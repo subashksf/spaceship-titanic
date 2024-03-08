@@ -14,7 +14,7 @@ import config
 from data_management import load_dataset
 from preprocessors import preprocess_boolean, label_encode, preprocess_cabin, preprocess_age
 from model_evaluation import model_metrics
-from models import model_rfc_train, model_rfc_predict
+from models import model_rfc_train, model_rfc_predict, save_model
 
 train = load_dataset(config.TRAIN_FILE)
 test = load_dataset(config.TEST_FILE)
@@ -69,3 +69,6 @@ y_pred_rfc = model_rfc_predict(X_test, rfc)
 
 # Model evaluation
 model_metrics(y_test, y_pred_rfc, 'Grid Searched Random Forest')
+
+# Save the model
+save_model(rfc)

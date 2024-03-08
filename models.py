@@ -1,4 +1,5 @@
 from sklearn.ensemble import RandomForestClassifier
+import joblib
 
 def model_rfc_train(X_train, y_train):
     # Model using the best random forest parameters. Refer the ipynb file for details of the GridSearchCV
@@ -9,3 +10,6 @@ def model_rfc_train(X_train, y_train):
 
 def model_rfc_predict(X_test, model):
     return model.predict(X_test)
+
+def save_model(model):
+    joblib.dump(model, "./saved_models/best_model.joblib")

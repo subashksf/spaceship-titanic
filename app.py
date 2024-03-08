@@ -1,6 +1,7 @@
 import gradio as gr
 import numpy as np
 import pandas as pd
+import joblib
 
 with gr.Blocks() as demo:
   HomePlanet = gr.Number(label="HomePlanet")
@@ -22,6 +23,9 @@ with gr.Blocks() as demo:
   
   prediction = gr.Textbox(label="Was the passenger transported?", interactive=False)
 
+  # load the saved model
+  best_model = joblib.load("./saved_models/best_model.joblib") 
+
   def predict(HomePlanet=0, 
             CryoSleep=0,	
             Destination=0,	
@@ -35,18 +39,14 @@ with gr.Blocks() as demo:
             num=0,
             side=0,	
             AgeGroup=0):
-    np_array = create_array([[num1, num2, num3, num4, num5, num6, num7, num8, num9, num10, num11, num12, num13]])
+
+    np_array = np.array([[HomePlanet, CryoSleep, Destination, VIP,	RoomService, FoodCourt, ShoppingMall,	Spa, VRDeck,	deck,	num,side,	AgeGroup]])
     df = pd.DataFrame(np_array, columns=['HomePlanet',	'CryoSleep',	'Destination',	'VIP',	'RoomService'	,'FoodCourt'	,'ShoppingMall',	'Spa',	'VRDeck',	'deck',	'num'	,'side',	'AgeGroup'])
-    transported = rfc.predict(df)[0]
+    transported = best_model.predict(df)
     if transported == 1:
       return f"The passenger was transported"
     else:
       return f"The passenger was not transported"
-
-  def create_array(numbers):
-    # Convert the list of numbers to a NumPy array
-    array = np.array(numbers)
-    return array
   
   predict_btn.click(predict, inputs=[HomePlanet, CryoSleep,	Destination,	VIP,	RoomService	,FoodCourt	,ShoppingMall,	Spa,	VRDeck,	deck,	num	,side,	AgeGroup], outputs = [prediction])
 
