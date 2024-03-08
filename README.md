@@ -1,3 +1,9 @@
+---
+title: Spaceship_Titanic
+app_file: app.py
+sdk: gradio
+sdk_version: 4.20.1
+---
 # spaceship-titanic
 A fun dataset to practice some classifiers.
 

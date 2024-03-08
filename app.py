@@ -1,4 +1,6 @@
 import gradio as gr
+import numpy as np
+import pandas as pd
 
 with gr.Blocks() as demo:
   HomePlanet = gr.Number(label="HomePlanet")
