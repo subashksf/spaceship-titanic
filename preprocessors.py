@@ -12,6 +12,10 @@ def label_encode(_data, TO_ENCODE_FEATURE):
     
     return _data
 
+def label_decode(_data, TO_DECODE_FEATURE):
+    label_decoder = LabelEncoder()
+    _data[TO_DECODE_FEATURE] = label_decoder.inverse_transform(TO_DECODE_FEATURE)
+
 def preprocess_cabin(_data):
     cabin_data = _data['Cabin'].str.split("/", n=2, expand=True)
 

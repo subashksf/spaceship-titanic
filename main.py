@@ -70,5 +70,16 @@ y_pred_rfc = model_rfc_predict(X_test, rfc)
 # Model evaluation
 model_metrics(y_test, y_pred_rfc, 'Grid Searched Random Forest')
 
+# A demo prediction to be used in gradio
+test_demo = np.array([['Earth', 0, 'TRAPPIST-1e', 1,	100, 200, 100,	10, 10,	'C',	'2','S',	'10s']])
+df_demo = pd.DataFrame(test_demo, columns=['HomePlanet',	'CryoSleep',	'Destination',	'VIP',	'RoomService'	,'FoodCourt'	,'ShoppingMall',	'Spa',	'VRDeck',	'deck',	'num'	,'side',	'AgeGroup'])
+
+# label encode the input parameters
+for col in config.FEATURES_TO_ENCODE:
+  df_demo = label_encode(df_demo, col)
+
+predict_demo = model_rfc_predict(df_demo, rfc)
+print(f"The demo prediction is {predict_demo}")  
+
 # Save the model
 save_model(rfc)
